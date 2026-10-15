@@ -2,7 +2,7 @@ import "server-only";
 import { and, eq, inArray, ne, notInArray } from "drizzle-orm";
 import { getDb, schema } from "../db";
 import type { LeadersJson, SearchQuery } from "../db/schema";
-import type { ParsedSerp } from "../types";
+import { computeLeaders } from "../ranking/leaders";
 import { parseSerp } from "./parse";
 import { queryIdFromTag } from "./tasks";
 
@@ -85,20 +85,6 @@ export async function ingestTask(task: RawTask): Promise<IngestOutcome> {
   return stored ? { kind: "stored", searchId } : { kind: "duplicate", searchId };
 }
 
-export interface QuerySerp {
-  query: string;
-  parsed: ParsedSerp;
-}
-
-/**
- * TODO(ranking): replace with `computeLeaders` from `src/lib/ranking/leaders.ts`
- * once that module lands. Until then searches finish `ready` with empty leaders.
- */
-function buildLeadersJson(serps: QuerySerp[]): LeadersJson {
-  void serps;
-  return { leaders: [], citedSources: [] };
-}
-
 /**
  * Once no query of the search is still pending/posted, computes leaders from
  * the stored snapshots and marks the search `ready` (or `failed` if every
@@ -126,13 +112,15 @@ export async function finalizeSearch(
   }
 
   const rows = await db
-    .select({ query: searchQueries.queryText, parsed: serpSnapshots.parsedJson })
+    .select({ queryText: searchQueries.queryText, parsed: serpSnapshots.parsedJson })
     .from(serpSnapshots)
     .innerJoin(searchQueries, eq(serpSnapshots.queryId, searchQueries.id))
     .where(and(eq(searchQueries.searchId, searchId), eq(searchQueries.status, "ready")));
 
-  const serps = rows.flatMap((r) => (r.parsed ? [{ query: r.query, parsed: r.parsed }] : []));
-  const leadersJson = buildLeadersJson(serps);
+  const snapshots = rows.flatMap((r) =>
+    r.parsed ? [{ queryText: r.queryText, parsed: r.parsed }] : [],
+  );
+  const leadersJson: LeadersJson = computeLeaders(snapshots);
 
   await db.transaction(async (tx) => {
     await tx.insert(results).values({ searchId, leadersJson }).onConflictDoNothing();

@@ -7,9 +7,16 @@ import { getTaskAdvanced } from "@/lib/dataforseo/tasks";
 
 const { searchQueries } = schema;
 
-/** Give the postback a head start before polling a task. */
-const MIN_AGE_MS = 2 * 60 * 1000;
+/** Give the postback a head start before polling a task. Override with RECONCILE_MIN_AGE_MS (e.g. 0 locally). */
+const DEFAULT_MIN_AGE_MS = 2 * 60 * 1000;
 const BATCH_SIZE = 50;
+
+function minAgeMs(): number {
+  const raw = process.env.RECONCILE_MIN_AGE_MS;
+  if (raw === undefined || raw === "") return DEFAULT_MIN_AGE_MS;
+  const n = Number(raw);
+  return Number.isFinite(n) && n >= 0 ? n : DEFAULT_MIN_AGE_MS;
+}
 
 function bearer(request: Request): string | null {
   const header = request.headers.get("authorization");
@@ -23,6 +30,14 @@ export async function GET(request: Request) {
   }
 
   const db = getDb();
+  const ageMs = minAgeMs();
+  const filters = [
+    eq(searchQueries.status, "posted"),
+    isNotNull(searchQueries.dataforseoTaskId),
+  ];
+  if (ageMs > 0) {
+    filters.push(lt(searchQueries.updatedAt, new Date(Date.now() - ageMs)));
+  }
   const pending = await db
     .select({
       id: searchQueries.id,
@@ -30,13 +45,7 @@ export async function GET(request: Request) {
       taskId: searchQueries.dataforseoTaskId,
     })
     .from(searchQueries)
-    .where(
-      and(
-        eq(searchQueries.status, "posted"),
-        isNotNull(searchQueries.dataforseoTaskId),
-        lt(searchQueries.updatedAt, new Date(Date.now() - MIN_AGE_MS)),
-      ),
-    )
+    .where(and(...filters))
     .orderBy(asc(searchQueries.updatedAt))
     .limit(BATCH_SIZE);
 
