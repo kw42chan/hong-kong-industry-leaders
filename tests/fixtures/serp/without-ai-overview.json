@@ -1,0 +1,138 @@
+{
+  "version": "0.1.20260930",
+  "status_code": 20000,
+  "status_message": "Ok.",
+  "time": "0.1104 sec.",
+  "cost": 0,
+  "tasks_count": 1,
+  "tasks_error": 0,
+  "tasks": [
+    {
+      "id": "10151013-1535-0139-0000-9d2b7e1c3a44",
+      "status_code": 20000,
+      "status_message": "Ok.",
+      "time": "0.0712 sec.",
+      "cost": 0,
+      "result_count": 1,
+      "path": ["v3", "serp", "google", "organic", "task_get", "advanced", "10151013-1535-0139-0000-9d2b7e1c3a44"],
+      "data": {
+        "api": "serp",
+        "function": "task_get",
+        "se": "google",
+        "se_type": "organic",
+        "language_code": "zh-TW",
+        "location_code": 2344,
+        "keyword": "會計師比較",
+        "device": "mobile",
+        "os": "android",
+        "depth": 10,
+        "load_async_ai_overview": true,
+        "tag": "6f1c2b9e-3d4a-4c1e-9b7a-0c2d4e6f8a10:1c8f6b4d-2a3e-4f7b-9d0c-3e4f5a6b7c8d",
+        "postback_url": "https://example.com/api/dataforseo/postback?secret=REDACTED",
+        "postback_data": "advanced"
+      },
+      "result": [
+        {
+          "keyword": "會計師比較",
+          "type": "organic",
+          "se_domain": "google.com.hk",
+          "location_code": 2344,
+          "language_code": "zh-TW",
+          "check_url": "https://www.google.com.hk/search?q=%E6%9C%83%E8%A8%88%E5%B8%AB%E6%AF%94%E8%BC%83&num=10&hl=zh-TW&gl=HK&gws_rd=cr&ie=UTF-8&oe=UTF-8&glp=1",
+          "datetime": "2026-10-15 09:13:02 +00:00",
+          "spell": null,
+          "refinement_chips": null,
+          "item_types": ["organic", "people_also_ask", "related_searches"],
+          "se_results_count": 642000,
+          "items_count": 6,
+          "items": [
+            {
+              "type": "organic",
+              "rank_group": 1,
+              "rank_absolute": 1,
+              "position": "left",
+              "xpath": "/html[1]/body[1]/div[3]/div[1]/div[13]/div[1]/div[2]/div[1]",
+              "domain": "www.price.com.hk",
+              "title": "會計師事務所比較 - Price.com.hk",
+              "url": "https://www.price.com.hk/services/accounting",
+              "breadcrumb": "https://www.price.com.hk › services",
+              "website_name": "Price.com.hk",
+              "is_image": false,
+              "is_video": false,
+              "is_featured_snippet": false,
+              "is_malicious": false,
+              "is_web_story": false,
+              "description": "比較香港會計師事務所收費及用家評價。",
+              "highlighted": ["會計師", "比較"],
+              "links": null,
+              "rectangle": null
+            },
+            {
+              "type": "organic",
+              "rank_group": 2,
+              "rank_absolute": 2,
+              "position": "left",
+              "domain": "WWW.WardCPA.com.hk",
+              "title": "會計師收費比較｜華德會計師事務所",
+              "url": "https://www.wardcpa.com.hk/zh/fees",
+              "breadcrumb": "https://www.wardcpa.com.hk › zh › fees",
+              "website_name": "華德會計師事務所",
+              "description": "中小企審計及報稅收費一覽。",
+              "rectangle": null
+            },
+            {
+              "type": "people_also_ask",
+              "rank_group": 1,
+              "rank_absolute": 3,
+              "position": "left",
+              "items": [
+                {
+                  "type": "people_also_ask_element",
+                  "title": "四大會計師事務所邊間最好？",
+                  "seed_question": null,
+                  "expanded_element": null
+                }
+              ],
+              "rectangle": null
+            },
+            {
+              "type": "organic",
+              "rank_group": 3,
+              "rank_absolute": 4,
+              "position": "left",
+              "domain": "www.discuss.com.hk",
+              "title": "會計師事務所邊間好？ - 香港討論區",
+              "url": "https://www.discuss.com.hk/viewthread.php?tid=31234567",
+              "breadcrumb": "https://www.discuss.com.hk › viewthread",
+              "website_name": "香港討論區",
+              "description": "大家覺得邊間會計師事務所服務好又平？",
+              "rectangle": null
+            },
+            {
+              "type": "organic",
+              "rank_group": 4,
+              "rank_absolute": 5,
+              "position": "left",
+              "domain": "www.bdo.com.hk",
+              "title": "立信德豪會計師事務所有限公司 | BDO Hong Kong",
+              "url": "https://www.bdo.com.hk/zh-hk/home-zh",
+              "breadcrumb": "https://www.bdo.com.hk › zh-hk",
+              "website_name": "BDO Hong Kong",
+              "description": "立信德豪為客戶提供審計、稅務及諮詢服務。",
+              "rectangle": null
+            },
+            {
+              "type": "related_searches",
+              "rank_group": 1,
+              "rank_absolute": 6,
+              "position": "left",
+              "title": "相關搜尋",
+              "items": ["會計師收費", "審計費用"],
+              "rectangle": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
