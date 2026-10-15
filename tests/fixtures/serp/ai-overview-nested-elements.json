@@ -1,0 +1,166 @@
+{
+  "version": "0.1.20260930",
+  "status_code": 20000,
+  "status_message": "Ok.",
+  "time": "0.1218 sec.",
+  "cost": 0,
+  "tasks_count": 1,
+  "tasks_error": 0,
+  "tasks": [
+    {
+      "id": "10151014-1535-0139-0000-2c5d8f3e6b77",
+      "status_code": 20000,
+      "status_message": "Ok.",
+      "time": "0.0801 sec.",
+      "cost": 0,
+      "result_count": 1,
+      "path": ["v3", "serp", "google", "organic", "task_get", "advanced", "10151014-1535-0139-0000-2c5d8f3e6b77"],
+      "data": {
+        "api": "serp",
+        "function": "task_get",
+        "se": "google",
+        "se_type": "organic",
+        "language_code": "zh-TW",
+        "location_code": 2344,
+        "keyword": "邊間牙醫好",
+        "device": "mobile",
+        "os": "android",
+        "depth": 10,
+        "load_async_ai_overview": true,
+        "tag": "7a2d3c0f-4e5b-4d2f-8c8b-1d3e5f7a9b21:2d9a7c5e-3b4f-4a8c-8e1d-4f5a6b7c8d9e",
+        "postback_url": "https://example.com/api/dataforseo/postback?secret=REDACTED",
+        "postback_data": "advanced"
+      },
+      "result": [
+        {
+          "keyword": "邊間牙醫好",
+          "type": "organic",
+          "se_domain": "google.com.hk",
+          "location_code": 2344,
+          "language_code": "zh-TW",
+          "check_url": "https://www.google.com.hk/search?q=%E9%82%8A%E9%96%93%E7%89%99%E9%86%AB%E5%A5%BD&num=10&hl=zh-TW&gl=HK",
+          "datetime": "2026-10-15 09:14:18 +00:00",
+          "spell": null,
+          "refinement_chips": null,
+          "item_types": ["ai_overview", "organic", "local_pack"],
+          "se_results_count": 2310000,
+          "items_count": 5,
+          "items": [
+            {
+              "type": "ai_overview",
+              "rank_group": 1,
+              "rank_absolute": 1,
+              "position": "left",
+              "markdown": null,
+              "items": [
+                {
+                  "type": "ai_overview_element",
+                  "position": "left",
+                  "title": "揀牙醫要留意",
+                  "text": "可參考香港牙醫管理委員會的註冊名冊，並比較診所位置、收費及專科資歷。",
+                  "markdown": null,
+                  "references": [
+                    {
+                      "type": "ai_overview_reference",
+                      "source": "香港牙醫管理委員會",
+                      "domain": "www.dchk.org.hk",
+                      "url": "https://www.dchk.org.hk/tc/list/index.htm",
+                      "title": "註冊牙醫名冊",
+                      "text": null
+                    },
+                    {
+                      "type": "ai_overview_reference",
+                      "source": "OpenRice",
+                      "domain": "www.openrice.com",
+                      "url": "https://www.openrice.com/zh/hongkong/article/dental-clinics",
+                      "title": "香港牙醫診所推介",
+                      "text": null
+                    }
+                  ],
+                  "links": null,
+                  "images": null
+                },
+                {
+                  "type": "ai_overview_element",
+                  "position": "left",
+                  "title": null,
+                  "text": "用家評價較多的包括微笑牙科及港島牙科中心。",
+                  "markdown": null,
+                  "references": [
+                    {
+                      "type": "ai_overview_reference",
+                      "source": "微笑牙科",
+                      "domain": "www.smiledental.com.hk",
+                      "url": "https://www.smiledental.com.hk/zh/",
+                      "title": "微笑牙科 | 香港牙科診所",
+                      "text": null
+                    },
+                    {
+                      "type": "ai_overview_reference",
+                      "source": "OpenRice",
+                      "domain": "www.openrice.com",
+                      "url": "https://www.openrice.com/zh/hongkong/article/dental-clinics",
+                      "title": "香港牙醫診所推介",
+                      "text": null
+                    }
+                  ],
+                  "links": null,
+                  "images": null
+                }
+              ],
+              "references": null,
+              "asynchronous_ai_overview": true
+            },
+            {
+              "type": "local_pack",
+              "rank_group": 1,
+              "rank_absolute": 2,
+              "position": "left",
+              "title": "微笑牙科",
+              "domain": "www.smiledental.com.hk",
+              "url": "https://www.smiledental.com.hk/zh/",
+              "rating": { "rating_type": "Max5", "value": 4.7, "votes_count": 312, "rating_max": 5 },
+              "rectangle": null
+            },
+            {
+              "type": "organic",
+              "rank_group": 2,
+              "rank_absolute": 4,
+              "position": "left",
+              "domain": "www.islanddental.com.hk",
+              "title": "港島牙科中心 | 洗牙、杜牙根、植牙",
+              "url": "https://www.islanddental.com.hk/",
+              "website_name": "港島牙科中心",
+              "description": "港島牙科中心提供全面牙科服務。",
+              "rectangle": null
+            },
+            {
+              "type": "organic",
+              "rank_group": 1,
+              "rank_absolute": 3,
+              "position": "left",
+              "domain": "www.smiledental.com.hk",
+              "title": "微笑牙科 | 香港牙科診所",
+              "url": "https://www.smiledental.com.hk/zh/",
+              "website_name": "微笑牙科",
+              "description": "微笑牙科位於中環及旺角。",
+              "rectangle": null
+            },
+            {
+              "type": "organic",
+              "rank_group": 3,
+              "rank_absolute": 5,
+              "position": "left",
+              "domain": null,
+              "title": "牙科診所推介 - OpenRice",
+              "url": "https://www.openrice.com/zh/hongkong/article/dental-clinics",
+              "website_name": "OpenRice",
+              "description": "香港牙科診所推介。",
+              "rectangle": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
