@@ -1,0 +1,21 @@
+{
+  "Metadata": {
+    "title": "香港行業龍頭搜尋器",
+    "description": "輸入行業關鍵字，查看 Google 香港視為市場領導者的企業。"
+  },
+  "Home": {
+    "title": "香港行業龍頭搜尋器",
+    "subtitle": "輸入行業關鍵字（例如：會計師、牙醫），找出 Google 香港推薦的市場領導者。",
+    "placeholder": "即將推出"
+  },
+  "Search": {
+    "title": "搜尋結果",
+    "processing": "處理中…"
+  },
+  "LocaleSwitcher": {
+    "label": "語言"
+  },
+  "Disclaimer": {
+    "text": "Google AI 概覽並無官方 API；資料來自 DataForSEO 的非官方擷取，結果或與個別香港用戶所見不同。僅為快照，並非 ChatGPT 或 Gemini 結果。"
+  }
+}

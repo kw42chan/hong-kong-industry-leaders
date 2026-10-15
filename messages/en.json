@@ -1,0 +1,21 @@
+{
+  "Metadata": {
+    "title": "Hong Kong Industry Leaders Finder",
+    "description": "Enter an industry keyword to see which businesses Google Hong Kong surfaces as market leaders."
+  },
+  "Home": {
+    "title": "Hong Kong Industry Leaders Finder",
+    "subtitle": "Enter an industry keyword (e.g. accounting firm, dentist) to find the market leaders Google Hong Kong recommends.",
+    "placeholder": "Coming soon"
+  },
+  "Search": {
+    "title": "Search results",
+    "processing": "Processing…"
+  },
+  "LocaleSwitcher": {
+    "label": "Language"
+  },
+  "Disclaimer": {
+    "text": "Google AI Overviews has no official API; data comes from an unofficial DataForSEO scrape and may differ from what a given Hong Kong user sees. Snapshot only, not ChatGPT or Gemini results."
+  }
+}
