@@ -6,16 +6,73 @@
   "Home": {
     "title": "Hong Kong Industry Leaders Finder",
     "subtitle": "Enter an industry keyword (e.g. accounting firm, dentist) to find the market leaders Google Hong Kong recommends.",
-    "placeholder": "Coming soon"
+    "howItWorks": "We run 6–8 typical Hong Kong recommendation searches on Google, read the AI Overviews and top organic results, then rank the businesses that keep showing up. Free, no sign-up.",
+    "examplesLabel": "Try:",
+    "examples": ["accounting firm", "dentist", "會計師", "牙醫"]
+  },
+  "SearchForm": {
+    "label": "Industry keyword",
+    "placeholder": "e.g. accounting firm",
+    "hint": "One industry or service, in Chinese or English.",
+    "submit": "Find leaders",
+    "submitting": "Starting…",
+    "errorEmpty": "Please enter a keyword.",
+    "errorTooLong": "Keep it under {max} characters.",
+    "errorGeneric": "Something went wrong starting the search. Please try again.",
+    "errorRateLimited": "Too many searches right now. Please wait a moment and try again."
   },
   "Search": {
     "title": "Search results",
-    "processing": "Processing…"
+    "keywordHeading": "Leaders for “{keyword}”",
+    "processingTitle": "Searching Google Hong Kong…",
+    "processingBody": "We're checking several searches and their AI Overviews. This usually takes 1–3 minutes. You can keep this page open; it updates automatically.",
+    "statusQueued": "Queued",
+    "statusRunning": "Running",
+    "failedTitle": "This search couldn't be completed",
+    "failedBody": "We couldn't collect enough search results this time. Please try again with the same or a different keyword.",
+    "notFoundTitle": "Search not found",
+    "notFoundBody": "This link may be wrong or the search may have expired.",
+    "networkError": "Having trouble reaching the server. Retrying…",
+    "newSearch": "Start a new search",
+    "scrapedAt": "Snapshot taken {date}",
+    "mockBadge": "Demo data (dev mock)"
+  },
+  "Leaders": {
+    "heading": "Market leaders",
+    "description": "Businesses ranked by how often Google's AI Overviews mention or cite them and how high they rank in organic results.",
+    "empty": "No clear leaders found for this keyword.",
+    "colRank": "Rank",
+    "colName": "Business",
+    "colScore": "Score",
+    "colAioMentions": "AIO mentions",
+    "colAioCitations": "AIO citations",
+    "colBestOrganic": "Best organic rank",
+    "colQueries": "Queries appeared",
+    "notRanked": "—",
+    "notRankedLabel": "Not in top 10",
+    "queriesCount": "{count, plural, one {# query} other {# queries}}",
+    "showQueries": "Show queries",
+    "opensInNewTab": "(opens in a new tab)"
+  },
+  "Sources": {
+    "heading": "Frequently cited sources",
+    "description": "Directories, media and reference sites that Google often cites. They're excluded from the leader list.",
+    "empty": "No frequently cited sources.",
+    "citations": "{count, plural, one {# citation} other {# citations}}"
+  },
+  "Queries": {
+    "heading": "Searches we checked",
+    "description": "Google Hong Kong, mobile, Traditional Chinese.",
+    "colQuery": "Search query",
+    "colAio": "AI Overview",
+    "yes": "Yes",
+    "no": "No"
   },
   "LocaleSwitcher": {
     "label": "Language"
   },
   "Disclaimer": {
+    "heading": "About this data",
     "text": "Google AI Overviews has no official API; data comes from an unofficial DataForSEO scrape and may differ from what a given Hong Kong user sees. Snapshot only, not ChatGPT or Gemini results."
   }
 }

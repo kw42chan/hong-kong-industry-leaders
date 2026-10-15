@@ -5,17 +5,74 @@
   },
   "Home": {
     "title": "香港行業龍頭搜尋器",
-    "subtitle": "輸入行業關鍵字（例如：會計師、牙醫），找出 Google 香港推薦的市場領導者。",
-    "placeholder": "即將推出"
+    "subtitle": "輸入行業關鍵字（例如：會計師、牙醫），睇吓 Google 香港會推薦邊幾間做龍頭。",
+    "howItWorks": "我哋會喺 Google 做 6 至 8 個香港人常見嘅推介搜尋，睇埋 AI 概覽同頭十個自然搜尋結果，再將經常出現嘅公司排個名。完全免費，唔使登記。",
+    "examplesLabel": "試吓：",
+    "examples": ["會計師", "牙醫", "accounting firm", "dentist"]
+  },
+  "SearchForm": {
+    "label": "行業關鍵字",
+    "placeholder": "例如：會計師",
+    "hint": "輸入一個行業或服務，中英文都得。",
+    "submit": "搵龍頭",
+    "submitting": "開始緊…",
+    "errorEmpty": "請輸入關鍵字。",
+    "errorTooLong": "唔好超過 {max} 個字。",
+    "errorGeneric": "開始搜尋嗰陣出咗問題，請再試一次。",
+    "errorRateLimited": "而家搜尋太多，請等一陣再試。"
   },
   "Search": {
     "title": "搜尋結果",
-    "processing": "處理中…"
+    "keywordHeading": "「{keyword}」嘅行業龍頭",
+    "processingTitle": "搜尋緊 Google 香港…",
+    "processingBody": "我哋正喺度檢查幾個搜尋同佢哋嘅 AI 概覽，一般要 1 至 3 分鐘。可以開住呢頁等，有結果會自動更新。",
+    "statusQueued": "排緊隊",
+    "statusRunning": "處理緊",
+    "failedTitle": "今次搜尋未能完成",
+    "failedBody": "今次收集唔到足夠嘅搜尋結果，請用同一個或者另一個關鍵字再試吓。",
+    "notFoundTitle": "搵唔到呢個搜尋",
+    "notFoundBody": "條連結可能有錯，或者搜尋已經過期。",
+    "networkError": "連唔到伺服器，重試緊…",
+    "newSearch": "重新搜尋",
+    "scrapedAt": "快照時間：{date}",
+    "mockBadge": "示範資料（開發用）"
+  },
+  "Leaders": {
+    "heading": "行業龍頭",
+    "description": "按 Google AI 概覽提及同引用嘅次數，加上自然搜尋排名，為各間公司排名。",
+    "empty": "呢個關鍵字暫時搵唔到明顯嘅龍頭。",
+    "colRank": "排名",
+    "colName": "公司",
+    "colScore": "分數",
+    "colAioMentions": "AI 概覽提及",
+    "colAioCitations": "AI 概覽引用",
+    "colBestOrganic": "最佳自然排名",
+    "colQueries": "出現過嘅搜尋",
+    "notRanked": "—",
+    "notRankedLabel": "唔喺頭十名",
+    "queriesCount": "{count} 個搜尋",
+    "showQueries": "睇搜尋",
+    "opensInNewTab": "（喺新分頁開啟）"
+  },
+  "Sources": {
+    "heading": "常被引用嘅來源",
+    "description": "Google 成日引用嘅名錄、媒體同參考網站，呢啲唔計入龍頭排名。",
+    "empty": "冇常被引用嘅來源。",
+    "citations": "{count} 次引用"
+  },
+  "Queries": {
+    "heading": "我哋檢查過嘅搜尋",
+    "description": "Google 香港、手機版、繁體中文。",
+    "colQuery": "搜尋字眼",
+    "colAio": "AI 概覽",
+    "yes": "有",
+    "no": "冇"
   },
   "LocaleSwitcher": {
     "label": "語言"
   },
   "Disclaimer": {
-    "text": "Google AI 概覽並無官方 API；資料來自 DataForSEO 的非官方擷取，結果或與個別香港用戶所見不同。僅為快照，並非 ChatGPT 或 Gemini 結果。"
+    "heading": "關於呢啲資料",
+    "text": "Google AI 概覽並冇官方 API；資料嚟自 DataForSEO 嘅非官方擷取，結果可能同個別香港用戶見到嘅唔同。只係一次性快照，並非 ChatGPT 或 Gemini 嘅結果。"
   }
 }
