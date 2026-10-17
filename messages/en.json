@@ -31,7 +31,7 @@
     "failedTitle": "This search couldn't be completed",
     "failedBody": "We couldn't collect enough search results this time. Please try again with the same or a different keyword.",
     "notFoundTitle": "Search not found",
-    "notFoundBody": "This link may be wrong or the search may have expired.",
+    "notFoundBody": "This link may be wrong.",
     "networkError": "Having trouble reaching the server. Retrying…",
     "newSearch": "Start a new search",
     "scrapedAt": "Snapshot taken {date}",

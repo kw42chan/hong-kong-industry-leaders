@@ -18,4 +18,13 @@ describe("i18n routing", () => {
   it("has the same message keys in every locale", () => {
     expect(keys(en).sort()).toEqual(keys(zhHK).sort());
   });
+
+  it("does not tell visitors a missing search expired", () => {
+    const enBody = en.Search.notFoundBody.toLowerCase();
+    const zhBody = zhHK.Search.notFoundBody;
+    expect(enBody).not.toMatch(/expir/);
+    expect(zhBody).not.toMatch(/過期/);
+    expect(enBody).toMatch(/wrong/);
+    expect(zhBody).toMatch(/錯/);
+  });
 });

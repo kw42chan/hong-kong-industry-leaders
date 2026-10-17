@@ -11,11 +11,17 @@ import {
   validateKeyword,
 } from "@/lib/queries/generate";
 import { routing } from "@/i18n/routing";
+import { getClientIp } from "@/lib/rate-limit/client-ip";
+import { searchStartRateLimit } from "@/lib/rate-limit/search-starts";
 
 const { searches, searchQueries } = schema;
 
 function badRequest(error: string) {
   return Response.json({ error }, { status: 400 });
+}
+
+function tooManyRequests() {
+  return Response.json({ error: "rate_limited" }, { status: 429 });
 }
 
 export async function POST(request: Request) {
@@ -36,6 +42,11 @@ export async function POST(request: Request) {
     rawLocale === undefined ? routing.defaultLocale : rawLocale;
   if (typeof locale !== "string" || !(routing.locales as readonly string[]).includes(locale)) {
     return badRequest("invalid_locale");
+  }
+
+  const clientIp = getClientIp(request);
+  if (!searchStartRateLimit.canStartSearch(clientIp)) {
+    return tooManyRequests();
   }
 
   const postbackUrl = buildPostbackUrl();
@@ -89,5 +100,6 @@ export async function POST(request: Request) {
   // Postbacks that landed before the statuses above were written could not finalize.
   await finalizeSearch(searchId);
 
+  searchStartRateLimit.noteSearchStarted(clientIp);
   return Response.json({ token }, { status: 201 });
 }

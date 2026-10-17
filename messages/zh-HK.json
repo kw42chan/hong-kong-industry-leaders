@@ -31,7 +31,7 @@
     "failedTitle": "今次搜尋未能完成",
     "failedBody": "今次收集唔到足夠嘅搜尋結果，請用同一個或者另一個關鍵字再試吓。",
     "notFoundTitle": "搵唔到呢個搜尋",
-    "notFoundBody": "條連結可能有錯，或者搜尋已經過期。",
+    "notFoundBody": "條連結可能有錯。",
     "networkError": "連唔到伺服器，重試緊…",
     "newSearch": "重新搜尋",
     "scrapedAt": "快照時間：{date}",
