@@ -71,13 +71,17 @@ describe("brand heuristics", () => {
 
 describe("computeLeaders", () => {
   it("returns empty results for empty input", () => {
-    expect(computeLeaders([])).toEqual({ leaders: [], citedSources: [] });
+    expect(computeLeaders([])).toEqual({
+      leaders: [],
+      citedSources: [],
+      classificationCandidates: [],
+    });
   });
 
   it("returns empty results when SERPs have no data", () => {
     expect(
       computeLeaders([{ queryText: "q", parsed: serp({}) }]),
-    ).toEqual({ leaders: [], citedSources: [] });
+    ).toEqual({ leaders: [], citedSources: [], classificationCandidates: [] });
   });
 
   it("scores AIO mention, citation and organic rank with the named weights", () => {
@@ -184,6 +188,22 @@ describe("computeLeaders", () => {
       },
     ]);
     expect(leaders[0].aioMentions).toBe(0);
+  });
+
+  it("excludes listicle organic titles via referrer heuristics", () => {
+    const { leaders, citedSources } = computeLeaders([
+      {
+        queryText: "q",
+        parsed: serp({
+          organic: [
+            organic(1, "magazine.hk", "2025 十大香港會計師推薦清單"),
+            organic(2, "real-firm.com.hk", "核數服務 | Real Firm"),
+          ],
+        }),
+      },
+    ]);
+    expect(leaders.map((l) => l.domain)).toEqual(["real-firm.com.hk"]);
+    expect(citedSources).toEqual([{ domain: "magazine.hk", count: 1 }]);
   });
 
   it("excludes aggregators from leaders and reports them as cited sources", () => {

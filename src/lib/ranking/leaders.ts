@@ -1,5 +1,7 @@
+import type { ClassificationCandidate } from "@/lib/classification/types";
 import type { CitedSource, Leader, ParsedSerp } from "@/lib/types";
 import { isAggregatorDomain, normalizeDomain } from "./aggregators";
+import { isReferrerByHeuristics } from "./referrer-heuristics";
 
 /** Points per query whose AI Overview text mentions the brand. */
 export const AIO_MENTION_WEIGHT = 10;
@@ -46,11 +48,14 @@ export interface SnapshotInput {
 export interface LeadersResult {
   leaders: Leader[];
   citedSources: CitedSource[];
+  /** Best SERP title/URL per domain for optional LLM enrichment. */
+  classificationCandidates: ClassificationCandidate[];
 }
 
 interface Candidate {
   domain: string;
   bestTitle: string | null;
+  bestUrl: string | null;
   bestTitleRank: number;
 }
 
@@ -162,10 +167,19 @@ export function computeLeaders(snapshots: SnapshotInput[]): LeadersResult {
   const candidates = new Map<string, Candidate>();
   const cited = new Map<string, Set<number>>();
 
-  const seen = (rawDomain: string, queryIndex: number, title?: string, rank?: number) => {
+  const seen = (
+    rawDomain: string,
+    queryIndex: number,
+    opts?: { title?: string; rank?: number; url?: string },
+  ) => {
     const domain = normalizeDomain(rawDomain);
     if (!domain) return;
-    if (isAggregatorDomain(domain)) {
+    const title = opts?.title;
+    const url = opts?.url;
+    if (
+      isAggregatorDomain(domain) ||
+      isReferrerByHeuristics({ domain, title, url })
+    ) {
       let queries = cited.get(domain);
       if (!queries) cited.set(domain, (queries = new Set()));
       queries.add(queryIndex);
@@ -173,19 +187,25 @@ export function computeLeaders(snapshots: SnapshotInput[]): LeadersResult {
     }
     let c = candidates.get(domain);
     if (!c) {
-      c = { domain, bestTitle: null, bestTitleRank: Infinity };
+      c = { domain, bestTitle: null, bestUrl: null, bestTitleRank: Infinity };
       candidates.set(domain, c);
     }
+    const rank = opts?.rank;
     if (title && rank !== undefined && rank < c.bestTitleRank) {
       c.bestTitle = title;
+      c.bestUrl = url ?? c.bestUrl;
       c.bestTitleRank = rank;
     }
   };
 
   snapshots.forEach(({ parsed }, qi) => {
-    for (const ref of parsed.aioReferences) seen(ref.domain || ref.url, qi);
+    for (const ref of parsed.aioReferences) {
+      seen(ref.domain || ref.url, qi, { title: ref.title, url: ref.url });
+    }
     for (const o of parsed.organic) {
-      if (isTopOrganic(o.rank)) seen(o.domain || o.url, qi, o.title, o.rank);
+      if (isTopOrganic(o.rank)) {
+        seen(o.domain || o.url, qi, { title: o.title, rank: o.rank, url: o.url });
+      }
     }
   });
 
@@ -277,7 +297,15 @@ export function computeLeaders(snapshots: SnapshotInput[]): LeadersResult {
     .map(([domain, queries]) => ({ domain, count: queries.size }))
     .sort((a, b) => b.count - a.count || compareStrings(a.domain, b.domain));
 
-  return { leaders, citedSources };
+  const classificationCandidates: ClassificationCandidate[] = [...candidates.values()].map(
+    (c) => ({
+      domain: c.domain,
+      bestTitle: c.bestTitle,
+      bestUrl: c.bestUrl,
+    }),
+  );
+
+  return { leaders, citedSources, classificationCandidates };
 }
 
 function compareStrings(a: string, b: string): number {

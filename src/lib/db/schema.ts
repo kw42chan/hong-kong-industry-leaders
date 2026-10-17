@@ -1,8 +1,10 @@
 import {
+  doublePrecision,
   index,
   jsonb,
   pgEnum,
   pgTable,
+  primaryKey,
   text,
   timestamp,
   uuid,
@@ -78,6 +80,29 @@ export interface LeadersJson {
   leaders: Leader[];
   citedSources: CitedSource[];
 }
+
+export const domainClassifications = pgTable(
+  "domain_classifications",
+  {
+    domain: text("domain").notNull(),
+    keyword: text("keyword").notNull(),
+    label: text("label").notNull(),
+    companyName: text("company_name"),
+    confidence: doublePrecision("confidence").notNull().default(0),
+    reasons: jsonb("reasons").$type<string[]>().notNull().default([]),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+  },
+  (t) => [
+    primaryKey({ columns: [t.domain, t.keyword] }),
+    index("domain_classifications_keyword_idx").on(t.keyword),
+  ],
+);
 
 export const results = pgTable("results", {
   id: uuid("id").primaryKey().defaultRandom(),
