@@ -2,6 +2,8 @@ import "server-only";
 import { and, eq, inArray, ne, notInArray } from "drizzle-orm";
 import { getDb, schema } from "../db";
 import type { LeadersJson, SearchQuery } from "../db/schema";
+import { applyOperatorFilter } from "../classification/filter";
+import { loadClassificationCache, saveClassificationCache } from "../classification/cache";
 import { computeLeaders } from "../ranking/leaders";
 import { parseSerp } from "./parse";
 import { queryIdFromTag } from "./tasks";
@@ -111,6 +113,12 @@ export async function finalizeSearch(
     return "failed";
   }
 
+  const [searchRow] = await db
+    .select({ keyword: searches.keyword })
+    .from(searches)
+    .where(eq(searches.id, searchId))
+    .limit(1);
+
   const rows = await db
     .select({ queryText: searchQueries.queryText, parsed: serpSnapshots.parsedJson })
     .from(serpSnapshots)
@@ -120,7 +128,17 @@ export async function finalizeSearch(
   const snapshots = rows.flatMap((r) =>
     r.parsed ? [{ queryText: r.queryText, parsed: r.parsed }] : [],
   );
-  const leadersJson: LeadersJson = computeLeaders(snapshots);
+  const ranked = computeLeaders(snapshots);
+  const filtered = await applyOperatorFilter(
+    searchRow?.keyword ?? "",
+    ranked,
+    ranked.classificationCandidates,
+    { loadCache: loadClassificationCache, saveCache: saveClassificationCache },
+  );
+  const leadersJson: LeadersJson = {
+    leaders: filtered.leaders,
+    citedSources: filtered.citedSources,
+  };
 
   await db.transaction(async (tx) => {
     await tx.insert(results).values({ searchId, leadersJson }).onConflictDoNothing();

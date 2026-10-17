@@ -82,6 +82,11 @@ See [.env.example](.env.example). Never commit `.env.local`.
 | `APP_URL` | Public base URL, used to build postback URLs |
 | `CRON_SECRET` | Bearer secret for `GET /api/cron/reconcile` |
 | `RECONCILE_MIN_AGE_MS` | Optional; default `120000`. Set `0` locally so reconcile can pull immediately |
+| `OPERATOR_FILTER_ENABLED` | Optional; default off. When `true`, runs homepage enrichment + batch LLM classification so only industry **operators** stay in `leaders` (referrers move to `citedSources`). Cheap referrer **heuristics always run** (blocklist + title/URL cues). |
+| `OPERATOR_FILTER_ENRICH` | Optional; default follows `OPERATOR_FILTER_ENABLED`. Set `false` to classify from SERP titles/URLs only. |
+| `OPENROUTER_API_KEY` / `OPENAI_API_KEY` | Required when `OPERATOR_FILTER_ENABLED=true` |
+| `LLM_BASE_URL` / `LLM_MODEL` | Optional OpenAI-compatible endpoint and model (default model `openai/gpt-4o-mini` on OpenRouter) |
+| `OPERATOR_FILTER_UNCERTAIN_MIN_CONFIDENCE` | Optional; default `1` (exclude `uncertain`). Lower to allow high-confidence uncertain domains into `leaders`. |
 
 ## Scripts
 
@@ -111,8 +116,18 @@ src/lib/types.ts              shared types (ParsedSerp, Leader, SearchResultDTO,
 src/lib/db/                   Drizzle schema + lazy client (getDb)
 src/lib/queries/              HK recommendation query generation
 src/lib/dataforseo/           client, task_post/get, SERP parse, ingest + finalize
-src/lib/ranking/              computeLeaders + aggregator exclusion
+src/lib/ranking/              computeLeaders, aggregator + referrer heuristics
+src/lib/classification/       optional LLM operator filter + (domain, keyword) cache
+src/lib/serp/types.ts         vendor-agnostic ParsedSerp boundary (DataForSEO today; SerpAPI later)
 ```
+
+### Operator vs referrer pipeline
+
+1. **SERP intake** (DataForSEO postback / reconcile) parses vendor JSON into `ParsedSerp` (`src/lib/serp/types.ts`).
+2. **`computeLeaders`** scores domains and applies **heuristic referrers** (expanded blocklist, listicle title cues such as 十大 / “best”, editorial URL paths). Matches never reach the LLM step.
+3. When **`OPERATOR_FILTER_ENABLED=true`**, **`finalizeSearch`** enriches surviving domains (homepage + about), batch-classifies via an OpenAI-compatible API, caches by `(domain, keyword)` in Postgres, and keeps only `operator` labels in `leaders` (referrers merge into `citedSources`).
+
+Apply migration `0001_domain_classifications.sql` (`pnpm db:migrate`) before enabling the LLM filter in production.
 
 ## Notes
 
