@@ -1,5 +1,7 @@
 # DataForSEO POC — AI Visibility (Hong Kong)
 
+Historical notes from the first provider trial. The product requirement is now SerpAPI: [ADR 0002](./adr/0002-serpapi-instead-of-dataforseo.md) and [MVP.md](./MVP.md).
+
 Proof-of-concept guide for validating **Google AI Overviews (AIO)** visibility before building the full app. Aligns with [PLANNING.md](./PLANNING.md).
 
 **AIO** = Google **AI Overviews** — the AI summary box at the top of Google search. There is **no official Google API** for it; DataForSEO returns scraped SERP JSON including an `ai_overview` item when present.

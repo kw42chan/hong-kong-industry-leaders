@@ -1,8 +1,8 @@
 # Hong Kong Industry Leaders Finder
 
-Enter an industry keyword (e.g. `會計師`, `牙醫`, `accounting firm`) and see which businesses Google Hong Kong surfaces as market leaders, based on DataForSEO SERP + AI Overview data.
+Enter an industry keyword (e.g. `會計師`, `牙醫`, `accounting firm`) and see which businesses Google Hong Kong surfaces as market leaders.
 
-Scope and product rules: [docs/MVP.md](docs/MVP.md) (overrides [docs/PLANNING.md](docs/PLANNING.md)). DataForSEO JSON details: [docs/POC.md](docs/POC.md).
+Searches call SerpAPI and parse into `ParsedSerp` ([docs/adr/0002-serpapi-instead-of-dataforseo.md](docs/adr/0002-serpapi-instead-of-dataforseo.md)). Ranking and the optional operator filter use that shape only. Scope: [docs/MVP.md](docs/MVP.md) (overrides [docs/PLANNING.md](docs/PLANNING.md)). The DataForSEO trial notes are [docs/POC.md](docs/POC.md).
 
 ## Stack
 
@@ -76,7 +76,8 @@ See [.env.example](.env.example). Never commit `.env.local`.
 | Variable | Purpose |
 |----------|---------|
 | `DATABASE_URL` | Postgres connection string |
-| `DATAFORSEO_LOGIN` / `DATAFORSEO_PASSWORD` | DataForSEO Basic auth |
+| `SERPAPI_API_KEY` | SerpAPI key for Google Hong Kong searches |
+| `DATAFORSEO_LOGIN` / `DATAFORSEO_PASSWORD` | Legacy DataForSEO Basic auth, used by the unused postback path |
 | `DATAFORSEO_BASE_URL` | Defaults to sandbox `https://sandbox.dataforseo.com/v3`; production is `https://api.dataforseo.com/v3` |
 | `POSTBACK_SECRET` | Shared secret for `POST /api/dataforseo/postback` |
 | `APP_URL` | Public base URL, used to build postback URLs |
@@ -118,12 +119,13 @@ src/lib/queries/              HK recommendation query generation
 src/lib/dataforseo/           client, task_post/get, SERP parse, ingest + finalize
 src/lib/ranking/              computeLeaders, aggregator + referrer heuristics
 src/lib/classification/       optional LLM operator filter + (domain, keyword) cache
-src/lib/serp/types.ts         vendor-agnostic ParsedSerp boundary (DataForSEO today; SerpAPI later)
+src/lib/serp/types.ts         vendor-agnostic ParsedSerp boundary
+src/lib/serpapi/              SerpAPI fetch + parse into ParsedSerp
 ```
 
 ### Operator vs referrer pipeline
 
-1. **SERP intake** (DataForSEO postback / reconcile) parses vendor JSON into `ParsedSerp` (`src/lib/serp/types.ts`).
+1. **SERP intake** parses vendor JSON into `ParsedSerp` (`src/lib/serp/types.ts`). New searches use SerpAPI (`src/lib/serpapi/parse.ts`).
 2. **`computeLeaders`** scores domains and applies **heuristic referrers** (expanded blocklist, listicle title cues such as 十大 / “best”, editorial URL paths). Matches never reach the LLM step.
 3. When **`OPERATOR_FILTER_ENABLED=true`**, **`finalizeSearch`** enriches surviving domains (homepage + about), batch-classifies via an OpenAI-compatible API, caches by `(domain, keyword)` in Postgres, and keeps only `operator` labels in `leaders` (referrers merge into `citedSources`).
 

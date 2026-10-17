@@ -1,6 +1,6 @@
 # Hong Kong GEO「點解唔推薦你」— Project Planning
 
-Greenfield web app. v1 uses **Google Search + Google AI Overviews** via DataForSEO SERP scrape. Delivery model: **web results page with a free teaser**, **full analysis and PDF behind Stripe Checkout (HKD)**.
+Greenfield web app. The industry-leaders MVP uses **Google Search + Google AI Overviews** via **SerpAPI** ([ADR 0002](./adr/0002-serpapi-instead-of-dataforseo.md)). This file's later brand-diagnosis product keeps the same provider. Older sentences below that name DataForSEO describe the rejected queue-and-postback design. Delivery model for that later product: **web results page with a free teaser**, **full analysis and PDF behind Stripe Checkout (HKD)**.
 
 Related doc: [POC.md](./POC.md) — DataForSEO proof-of-concept for AI visibility.
 

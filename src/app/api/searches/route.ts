@@ -1,10 +1,10 @@
 import "server-only";
 import { randomBytes } from "node:crypto";
 import { and, eq } from "drizzle-orm";
+import { after } from "next/server";
 import { getDb, schema } from "@/lib/db";
-import { buildPostbackUrl } from "@/lib/dataforseo/auth";
 import { finalizeSearch } from "@/lib/dataforseo/ingest";
-import { postTasks } from "@/lib/dataforseo/tasks";
+import { fetchGoogleSerp } from "@/lib/serpapi/search";
 import {
   generateQueries,
   normalizeKeyword,
@@ -14,7 +14,7 @@ import { routing } from "@/i18n/routing";
 import { getClientIp } from "@/lib/rate-limit/client-ip";
 import { searchStartRateLimit } from "@/lib/rate-limit/search-starts";
 
-const { searches, searchQueries } = schema;
+const { searches, searchQueries, serpSnapshots } = schema;
 
 function badRequest(error: string) {
   return Response.json({ error }, { status: 400 });
@@ -44,12 +44,11 @@ export async function POST(request: Request) {
     return badRequest("invalid_locale");
   }
 
-  const clientIp = getClientIp(request);
-  if (!searchStartRateLimit.canStartSearch(clientIp)) {
+  const ip = getClientIp(request);
+  if (!searchStartRateLimit.canStartSearch(ip)) {
     return tooManyRequests();
   }
 
-  const postbackUrl = buildPostbackUrl();
   const queryTexts = generateQueries(keyword, locale);
   const token = randomBytes(24).toString("base64url");
   const db = getDb();
@@ -66,40 +65,40 @@ export async function POST(request: Request) {
     return { searchId: search.id, queries };
   });
 
-  let posted;
-  try {
-    posted = await postTasks(queries, searchId, postbackUrl);
-  } catch (err) {
-    console.error("DataForSEO task_post failed", err);
-    await db.update(searches).set({ status: "failed" }).where(eq(searches.id, searchId));
-    return Response.json({ error: "upstream_failed" }, { status: 502 });
-  }
-
-  // Only touch rows still `pending`: a fast postback may already have marked one `ready`.
-  await Promise.all(
-    posted.map((p) =>
-      db
-        .update(searchQueries)
-        .set(p.ok ? { status: "posted", dataforseoTaskId: p.taskId } : { status: "failed" })
-        .where(and(eq(searchQueries.id, p.queryId), eq(searchQueries.status, "pending"))),
-    ),
-  );
-
-  const failed = posted.filter((p) => !p.ok);
-  if (failed.length) console.error("DataForSEO rejected tasks", failed);
-
-  if (failed.length === posted.length) {
-    await db.update(searches).set({ status: "failed" }).where(eq(searches.id, searchId));
-    return Response.json({ error: "upstream_failed" }, { status: 502 });
-  }
-
   await db
     .update(searches)
     .set({ status: "running" })
     .where(and(eq(searches.id, searchId), eq(searches.status, "queued")));
-  // Postbacks that landed before the statuses above were written could not finalize.
-  await finalizeSearch(searchId);
 
-  searchStartRateLimit.noteSearchStarted(clientIp);
+  after(async () => {
+    await Promise.all(
+      queries.map(async (query) => {
+        try {
+          const snap = await fetchGoogleSerp(query.text);
+          await db.insert(serpSnapshots).values({
+            queryId: query.id,
+            rawJson: snap.raw,
+            parsedJson: snap.parsed,
+          });
+          await db
+            .update(searchQueries)
+            .set({ status: "ready" })
+            .where(eq(searchQueries.id, query.id));
+        } catch (err) {
+          console.error(
+            "SerpAPI search failed",
+            err instanceof Error ? err.message : "unknown error",
+          );
+          await db
+            .update(searchQueries)
+            .set({ status: "failed" })
+            .where(eq(searchQueries.id, query.id));
+        }
+      }),
+    );
+    await finalizeSearch(searchId);
+  });
+
+  searchStartRateLimit.noteSearchStarted(ip);
   return Response.json({ token }, { status: 201 });
 }

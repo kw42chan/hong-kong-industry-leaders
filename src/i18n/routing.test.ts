@@ -19,12 +19,10 @@ describe("i18n routing", () => {
     expect(keys(en).sort()).toEqual(keys(zhHK).sort());
   });
 
-  it("does not tell visitors a missing search expired", () => {
-    const enBody = en.Search.notFoundBody.toLowerCase();
-    const zhBody = zhHK.Search.notFoundBody;
-    expect(enBody).not.toMatch(/expir/);
-    expect(zhBody).not.toMatch(/過期/);
-    expect(enBody).toMatch(/wrong/);
-    expect(zhBody).toMatch(/錯/);
+  it("tells a visitor a missing search link is wrong, without saying it expired", () => {
+    expect(en.Search.notFoundBody).toBe("This link may be wrong.");
+    expect(zhHK.Search.notFoundBody).toBe("條連結可能有錯。");
+    expect(en.Search.notFoundBody.toLowerCase()).not.toContain("expired");
+    expect(zhHK.Search.notFoundBody).not.toContain("過期");
   });
 });
